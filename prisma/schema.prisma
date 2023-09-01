@@ -15,7 +15,7 @@ model User {
   name             String
   email            String            @unique
   password         String
-  role             Roles             @default(CUSTOMER)
+  role             Roles             @default(customer)
   contactNo        String
   address          String
   profileImg       String
@@ -26,8 +26,8 @@ model User {
 }
 
 enum Roles {
-  ADMIN
-  CUSTOMER
+  admin
+  customer
 }
 
 model Category {
@@ -80,7 +80,7 @@ model OrderedBooks {
 
 model Order {
   id        String      @id @default(uuid())
-  status    OrderStatus @default(PENDING)
+  status    OrderStatus @default(pending)
   createdAt DateTime    @default(now())
 
   userId       String
@@ -91,7 +91,7 @@ model Order {
 }
 
 enum OrderStatus {
-  PENDING
-  SHIPPED
-  DELIVERED
+  pending
+  shipped
+  delivered
 }

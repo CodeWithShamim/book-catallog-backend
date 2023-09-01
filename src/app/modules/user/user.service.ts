@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import argon2 from 'argon2';
@@ -5,7 +6,6 @@ import argon2 from 'argon2';
 const createUser = async (payload: User): Promise<User> => {
   payload.password = await argon2.hash(payload.password);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: any = await prisma.user.create({
     data: payload,
   });
@@ -30,7 +30,44 @@ const getAllUser = async (): Promise<Omit<User, 'password'>[]> => {
   return result;
 };
 
+const getSingleUser = async (id: string): Promise<User | null> => {
+  const result: any = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  result.password = undefined;
+  return result;
+};
+
+const updateUser = async (
+  id: string,
+  data: Partial<User>
+): Promise<User | null> => {
+  const result: any = await prisma.user.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  result.password = undefined;
+  return result;
+};
+
+const deleteUser = async (id: string): Promise<User> => {
+  const result: any = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  result.password = undefined;
+  return result;
+};
+
 export const UserService = {
   createUser,
   getAllUser,
+  getSingleUser,
+  updateUser,
+  deleteUser,
 };
