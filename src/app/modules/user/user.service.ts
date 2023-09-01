@@ -15,6 +15,22 @@ const createUser = async (payload: User): Promise<User> => {
   return result;
 };
 
+const getAllUser = async (): Promise<Omit<User, 'password'>[]> => {
+  const result = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+  return result;
+};
+
 export const UserService = {
   createUser,
+  getAllUser,
 };
