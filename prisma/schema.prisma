@@ -11,14 +11,16 @@ datasource db {
 }
 
 model User {
-  id         String @id @default(uuid())
-  name       String
-  email      String @unique
-  password   String
-  role       Roles  @default(CUSTOMER)
-  contactNo  String
-  address    String
-  profileImg String
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  role             Roles             @default(CUSTOMER)
+  contactNo        String
+  address          String
+  profileImg       String
+  reviewAndRatings ReviewAndRating[]
+  orders           Order[]
 
   @@map("users")
 }
@@ -26,4 +28,70 @@ model User {
 enum Roles {
   ADMIN
   CUSTOMER
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String
+  books Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id               String            @id @default(uuid())
+  title            String
+  author           String
+  price            Float
+  genre            String
+  publicationDate  DateTime
+  categoryId       String
+  category         Category          @relation(fields: [categoryId], references: [id])
+  reviewAndRatings ReviewAndRating[]
+  orderedBooks     OrderedBooks[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("review_and_ratings")
+}
+
+model OrderedBooks {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  bookId  String
+  book    Book   @relation(fields: [bookId], references: [id])
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  @@map("ordered_books")
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  orderedBooks OrderedBooks[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
 }

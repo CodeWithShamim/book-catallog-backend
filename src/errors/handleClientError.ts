@@ -24,7 +24,7 @@ const handleClientError = (error: PrismaClientKnownRequestError) => {
       },
     ];
   } else if (error.code === 'P2002') {
-    message = `${error.meta?.target as string} is unique`;
+    message = `${error.meta?.target as string} must be unique`;
     errorMessages = [
       {
         path: '',
