@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Book } from '@prisma/client';
 import prisma from '../../../shared/prisma';
+import { IFilters } from './book.interface';
+import { IPaginationOptions } from '../../../interfaces/pagination';
+import { IGenericResponse } from '../../../interfaces/common';
+import handleFilters from '../../../shared/hanldeFilters';
+import { BookSearchableFields } from './book.constant';
+import { paginationHelpers } from '../../../helpers/paginationHelper';
 
 const createBook = async (payload: Book): Promise<Book> => {
   const result = await prisma.book.create({
@@ -13,13 +19,35 @@ const createBook = async (payload: Book): Promise<Book> => {
   return result;
 };
 
-const getAllBook = async (): Promise<Book[]> => {
+const getAllBook = async (
+  filters: IFilters,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Book[]>> => {
+  const whereConditions = handleFilters(filters, BookSearchableFields);
+  const { page, size, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(options);
+
   const result = await prisma.book.findMany({
+    where: whereConditions,
+    skip,
+    take: size,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
     include: {
       category: true,
     },
   });
-  return result;
+
+  return {
+    meta: {
+      page,
+      size,
+      total: result.length,
+      totalPage: Math.ceil(result.length / size),
+    },
+    data: result,
+  };
 };
 
 const getSingleBook = async (id: string): Promise<Book | null> => {

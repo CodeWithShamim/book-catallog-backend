@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const handleFilters = (filters: any, searchFields: string[]) => {
-  const { searchTerm, ...filtersData } = filters;
+  const { search, ...filtersData } = filters;
   const andConditons = [];
 
   // search
-  if (searchTerm) {
+  if (search) {
     andConditons.push({
       OR: searchFields.map((field: string) => ({
         [field]: {
-          contains: searchTerm,
+          contains: search,
           mode: 'insensitive',
         },
       })),
