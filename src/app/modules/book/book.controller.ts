@@ -46,6 +46,22 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getBookByCategory = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, paginationFields);
+  const result = await BookService.getBookByCategory(
+    req.params.categoryId,
+    options
+  );
+
+  sendResponse<Book[]>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Book with associated category data fetched successfully.',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const result = await BookService.updateBook(req.params.id, req.body);
 
@@ -72,6 +88,7 @@ export const BookController = {
   createBook,
   getAllBook,
   getSingleBook,
+  getBookByCategory,
   updateBook,
   deleteBook,
 };
