@@ -44,7 +44,7 @@ const getSingleUser = async (id: string): Promise<User | null> => {
 };
 
 const getMyProfile = async (userData: IUserData): Promise<User | null> => {
-  const result: any = await prisma.user.findUnique({
+  const result: any = await prisma.user.findFirst({
     where: {
       id: userData.userId,
     },
