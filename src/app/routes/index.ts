@@ -16,6 +16,10 @@ const moduleRoutes = [
     route: UserRoute,
   },
   {
+    path: '/profile',
+    route: UserRoute,
+  },
+  {
     path: '/categories',
     route: CategoryRoute,
   },

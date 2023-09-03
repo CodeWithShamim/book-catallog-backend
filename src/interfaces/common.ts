@@ -15,3 +15,8 @@ export type IGenericErrorResponse = {
   message: string;
   errorMessages: IGenericErrorMessage[];
 };
+
+export type IUserData = {
+  userId: string;
+  role: string;
+};

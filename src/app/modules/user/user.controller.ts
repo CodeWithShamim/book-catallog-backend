@@ -39,6 +39,18 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const userData = req.user as never;
+  const result = await UserService.getMyProfile(userData);
+
+  sendResponse<User>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Profile information retrieved successfully.',
+    data: result,
+  });
+});
+
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.updateUser(req.params.id, req.body);
 
@@ -65,6 +77,7 @@ export const UserController = {
   createUser,
   getAllUser,
   getSingleUser,
+  getMyProfile,
   updateUser,
   deleteUser,
 };

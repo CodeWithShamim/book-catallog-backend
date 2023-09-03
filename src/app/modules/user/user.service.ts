@@ -2,6 +2,9 @@
 import { User } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import argon2 from 'argon2';
+import { IUserData } from '../../../interfaces/common';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
 const createUser = async (payload: User): Promise<User> => {
   payload.password = await argon2.hash(payload.password);
@@ -40,6 +43,21 @@ const getSingleUser = async (id: string): Promise<User | null> => {
   return result;
 };
 
+const getMyProfile = async (userData: IUserData): Promise<User | null> => {
+  const result: any = await prisma.user.findUnique({
+    where: {
+      id: userData.userId,
+    },
+  });
+
+  if (!result?.id) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist!');
+  }
+
+  result.password = undefined;
+  return result;
+};
+
 const updateUser = async (
   id: string,
   data: Partial<User>
@@ -68,6 +86,7 @@ export const UserService = {
   createUser,
   getAllUser,
   getSingleUser,
+  getMyProfile,
   updateUser,
   deleteUser,
 };

@@ -3,11 +3,7 @@ import { Order, OrderedBooks } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
-
-type IUserData = {
-  userId: string;
-  role: string;
-};
+import { IUserData } from '../../../interfaces/common';
 
 const createOrder = async (data: {
   orderedBooks: OrderedBooks[];
